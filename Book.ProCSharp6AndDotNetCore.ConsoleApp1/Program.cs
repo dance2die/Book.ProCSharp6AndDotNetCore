@@ -11,10 +11,20 @@ namespace Book.ProCSharp6AndDotNetCore.ConsoleApp1
 		public static void Main(string[] args)
 		{
 			var result =
-				Parallel.For(0, 10, i =>
+				Parallel.For(10, 40, (int i, ParallelLoopState pls) =>
 				{
 					Log($"S {i}");
+
+					if (i > 12)
+					{
+						pls.Break();
+						Log($"Break now... {i}");
+					}
+
+					// This waits for the background task to end
 					Task.Delay(10).Wait();
+					// This dose NOT wait for the background task to finish.
+					//await Task.Delay(10);
 					Log($"E {i}");
 				});
 
