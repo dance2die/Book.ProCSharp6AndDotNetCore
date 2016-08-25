@@ -10,6 +10,35 @@ namespace Book.ProCSharp6AndDotNetCore.ConsoleApp1
 	{
 		public static void Main(string[] args)
 		{
+			//FirstTest();
+
+			ParallelForWithInit();
+		}
+
+		private static void ParallelForWithInit()
+		{
+			Parallel.For<string>(0, 10, () =>
+				{
+					// Invoked once for each thread
+					Log("Init thread");
+					return $"t{Thread.CurrentThread.ManagedThreadId}";
+				},
+				(i, pls, str1) =>
+				{
+					// Invoked for each member
+					Log($"body i {i} str1 {str1}");
+					Task.Delay(10).Wait();
+					return "$i {i}";
+				},
+				str1 =>
+				{
+					// final action on each thread.
+					Log($"finally {str1}");
+				});
+		}
+
+		private static void FirstTest()
+		{
 			var result =
 				Parallel.For(10, 40, (int i, ParallelLoopState pls) =>
 				{
