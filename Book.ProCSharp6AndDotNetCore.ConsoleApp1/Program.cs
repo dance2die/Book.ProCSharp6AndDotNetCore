@@ -25,6 +25,8 @@ namespace Book.ProCSharp6AndDotNetCore.ConsoleApp1
 			var t3 = new Task(TaskMethod, "using a task ctor and STart");
 			t3.Start();
 			Task t4 = Task.Run(() => TaskMethod("using the Run method"));
+
+			Task.WaitAll(t1, t2, t3, t4);
 		}
 
 
