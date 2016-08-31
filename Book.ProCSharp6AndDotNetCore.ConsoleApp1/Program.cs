@@ -14,7 +14,40 @@ namespace Book.ProCSharp6AndDotNetCore.ConsoleApp1
 
 			//ParallelForWithInit();
 
-			TasksUsingThreadPool();
+			//TasksUsingThreadPool();
+
+			ContinuationWithTasks();
+		}
+
+		private static void ContinuationWithTasks()
+		{
+			Task t1 = new Task(DoOnFirst);
+			Task t2 = t1.ContinueWith(DoOnSecond);
+			Task t3 = t1.ContinueWith(DoOnSecond);
+			Task t4 = t2.ContinueWith(DoOnSecond);
+			Task t5 = t1.ContinueWith(DoOnError, TaskContinuationOptions.OnlyOnFaulted);
+			t1.Start();
+
+			Task.WaitAll(t1, t2, t3, t4, t5);
+		}
+
+		private static void DoOnError(Task arg1, object arg2)
+		{
+			WriteLine($"Error occured: {Task.CurrentId}");
+		}
+
+		private static void DoOnFirst()
+		{
+			WriteLine($"doing some task {Task.CurrentId}");
+			Task.Delay(1000).Wait();
+		}
+
+		private static void DoOnSecond(Task t)
+		{
+			WriteLine($"task {t.Id} finished");
+			WriteLine($"this task id {Task.CurrentId}");
+			WriteLine("do some cleanup");
+			Task.Delay(1000).Wait();
 		}
 
 		private static void TasksUsingThreadPool()
