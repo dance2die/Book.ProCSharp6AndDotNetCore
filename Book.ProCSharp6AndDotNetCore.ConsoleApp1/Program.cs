@@ -16,7 +16,36 @@ namespace Book.ProCSharp6AndDotNetCore.ConsoleApp1
 
 			//TasksUsingThreadPool();
 
-			ContinuationWithTasks();
+			//ContinuationWithTasks();
+
+			ParentAndChild();
+		}
+
+		public static void ParentAndChild()
+		{
+			var parent = new Task(ParentTask);
+			parent.Start();
+			Task.Delay(2000).Wait();
+
+			WriteLine(parent.Status);
+			Task.Delay(4000).Wait();
+			WriteLine(parent.Status);
+		}
+
+		private static void ParentTask()
+		{
+			WriteLine($"task id {Task.CurrentId}");
+			var child = new Task(ChildTask);
+			child.Start();
+			Task.Delay(1000).Wait();
+			WriteLine("parent started child");
+		}
+
+		private static void ChildTask()
+		{
+			WriteLine("child");
+			Task.Delay(5000).Wait();
+			WriteLine("child finished");
 		}
 
 		private static void ContinuationWithTasks()
